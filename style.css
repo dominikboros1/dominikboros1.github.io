@@ -134,9 +134,9 @@ footer a:hover {
 }
 
 .profile-pic {
-  width: 120px;       /* smaller circle */
-  height: 120px;
-  border-radius: 50%; /* ensures it's a perfect circle */
+  width: 125px;      
+  height: 125px;
+  border-radius: 50%;
   border: 2px solid var(--accent-primary);
   object-fit: cover;
   box-shadow: 0 0 10px rgba(88,166,255,0.3);
@@ -145,3 +145,4 @@ footer a:hover {
 .profile-pic:hover {
   transform: scale(1.05);
 }
+
