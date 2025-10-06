@@ -5,13 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dominik Boros — Mobile Developer</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <header>
+    <div class="hero">
+  <img src="profile.jpg" alt="Dominik Boros Profile" class="profile-pic" />
+  <div class="hero-text">
     <h1>Dominik Boros</h1>
     <p>Mobile Developer & Computer Science Student</p>
+    <a href="Dominik's Resume.pdf" class="button" download>📄 Download CV</a>
+  </div>
+</div>
     <nav>
       <a href="#about">About</a>
+      <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -19,16 +28,16 @@
 
   <section id="about">
     <h2>About Me</h2>
-    <p>I’m a dynamic and sociable mobile developer with a strong passion for technology. Currently studying Computer Science at West University of Timisoara, I thrive on learning new skills and delivering positive results for clients.</p>
+    <p>I’m a dynamic and sociable mobile developer with a strong passion for technology. Currently studying Computer Science at West University of Timisoara, I thrive on learning new skills and delivering positive results for clients. I'm competing in as many hackathons as I can and doing my best in all of them, I'm open to learning new things.</p>
   </section>
 
   <section id="skills">
     <h2>Skills</h2>
-    <ul>
-      <li>React Native, React, Expo</li>
-      <li>Firebase, Google Maps API, Geocoding API</li>
-      <li>TypeScript, Java, Python</li>
-      <li>HTML, CSS, JavaScript</li>
+    <ul class="skills-list">
+      <li><i class="fab fa-react"></i> React Native, React, Expo</li>
+      <li><i class="fas fa-database"></i> Firebase, Google Maps API, Geocoding API</li>
+      <li><i class="fas fa-code"></i> TypeScript, Java, Python</li>
+      <li><i class="fas fa-globe"></i> HTML, CSS, JavaScript</li>
     </ul>
   </section>
 
@@ -36,7 +45,7 @@
     <h2>Projects</h2>
     <div class="project">
       <h3>SalontaFood</h3>
-      <p>View local food place app for Salonta, Romania. Each with their own tags lcoation phone number and more.</p>
+      <p>Local food place app for Salonta, Romania. Each with tags, location, phone number, and more.</p>
       <p>Site: <a href="https://dominikboros1.github.io/SalontaFoodMobile">SalontaFood</a></p>
     </div>
     <div class="project">
@@ -55,14 +64,15 @@
 
   <section id="contact">
     <h2>Contact</h2>
-    <p>Email: <a href="mailto:dominikboros75@gmail.com">dominikboros75@gmail.com</a></p>
-    <p>GitHub: <a href="https://github.com/dominikboros1">dominikboros1</a></p>
-    <p>LinkedIn: <a href="https://linkedin.com/in/dominikboros">linkedin.com/in/dominikboros</a></p>
-    <p>Instagram: <a href="https://instagram.com/dominik.boros.758">@dominik.boros.758</a></p>
+    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:dominikboros75@gmail.com">dominikboros75@gmail.com</a></p>
+    <p><i class="fab fa-github"></i> GitHub: <a href="https://github.com/dominikboros1">dominikboros1</a></p>
+    <p><i class="fab fa-linkedin"></i> LinkedIn: <a href="https://linkedin.com/in/dominikboros">linkedin.com/in/dominikboros</a></p>
+    <p><i class="fab fa-instagram"></i> Instagram: <a href="https://instagram.com/dominik.boros.758">@dominik.boros.758</a></p>
   </section>
 
   <footer>
     <p>© 2025 Dominik Boros</p>
+    <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
   </footer>
 
   <script src="script.js"></script>
