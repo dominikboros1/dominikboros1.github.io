@@ -4,77 +4,609 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dominik Boros — Mobile Developer</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --accent: #c8f060;
+      --accent2: #60d0f0;
+      --text: #f0ede6;
+      --muted: #666;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--border); }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: center;
+    }
+    .hero-left { position: relative; }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 2px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+    .hero-tag .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(52px, 6vw, 88px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.3s forwards;
+    }
+    h1 span { color: var(--accent); }
+    .hero-sub {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 380px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.45s forwards;
+    }
+    .hero-actions {
+      margin-top: 40px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.55s forwards;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #0a0a0a;
+      padding: 14px 28px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      text-decoration: none;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--muted); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--text);
+      padding: 14px 28px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    .hero-right {
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeIn 0.8s 0.6s forwards;
+    }
+    .profile-wrapper {
+      position: relative;
+      width: 300px;
+      height: 360px;
+    }
+    .profile-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 16px; left: 16px;
+      width: 100%; height: 100%;
+      border: 1px solid var(--accent);
+      opacity: 0.4;
+    }
+    .profile-pic {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(30%);
+      position: relative;
+      z-index: 1;
+    }
+    .profile-badge {
+      position: absolute;
+      bottom: -16px; right: -16px;
+      background: var(--accent);
+      color: #0a0a0a;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 10px 16px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    section {
+      padding: 100px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 48px;
+    }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .about-text { color: #999; font-size: 14px; line-height: 1.9; }
+    .about-text strong { color: var(--text); }
+    .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .stat { background: var(--surface); border: 1px solid var(--border); padding: 28px 24px; transition: border-color 0.2s; }
+    .stat:hover { border-color: var(--accent); }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 800; color: var(--accent); letter-spacing: -2px; line-height: 1; }
+    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2px; }
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px 28px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--accent);
+      transition: height 0.3s;
+    }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .skill-card:hover::before { height: 100%; }
+    .skill-icon { font-size: 22px; color: var(--accent); margin-bottom: 16px; }
+    .skill-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 8px; color: var(--text); }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag { font-size: 10px; padding: 3px 10px; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.05em; }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(200,240,96,0.04));
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .project-card:hover { border-color: var(--accent); }
+    .project-card:hover::after { opacity: 1; }
+    .project-num { font-size: 11px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 20px; }
+    .project-card h3 { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; color: var(--text); }
+    .project-card p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      color: var(--accent2);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      transition: gap 0.2s;
+      position: relative;
+      z-index: 2;
+    }
+    .project-link:hover { gap: 14px; }
+    .project-arrow {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      position: absolute; top: 36px; right: 36px;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .project-card:hover .project-arrow { border-color: var(--accent); color: var(--accent); transform: rotate(45deg); }
+
+    #contact { border-top: 1px solid var(--border); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-text { color: var(--muted); font-size: 14px; line-height: 1.9; margin-bottom: 40px; }
+    .contact-links { display: flex; flex-direction: column; gap: 2px; }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      transition: border-color 0.2s, padding-left 0.2s;
+    }
+    .contact-item:hover { border-color: var(--accent); padding-left: 32px; }
+    .contact-item i { color: var(--accent); width: 16px; text-align: center; }
+    .contact-item span { color: var(--muted); font-size: 11px; margin-left: auto; letter-spacing: 0.05em; }
+    .contact-cta { position: sticky; top: 120px; }
+    .contact-cta h3 { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 20px; }
+    .contact-cta h3 span { color: var(--accent); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    footer p { color: var(--muted); font-size: 12px; letter-spacing: 0.05em; }
+    .back-top {
+      width: 40px; height: 40px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .back-top:hover { border-color: var(--accent); color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { gap: 20px; }
+      .nav-links a { font-size: 11px; }
+      #hero { padding: 100px 24px 60px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 60px; }
+      .hero-right { order: -1; }
+      .profile-wrapper { width: 220px; height: 270px; }
+      h1 { font-size: 52px; letter-spacing: -2px; }
+      section { padding: 70px 24px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      footer { padding: 24px; }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="hero">
-  <img src="profile.jpg" alt="Dominik Boros Profile" class="profile-pic" />
-  <div class="hero-text">
-    <h1>Dominik Boros</h1>
-    <p>Mobile Developer & Computer Science Student</p>
-    <a href="Dominik's Resume.pdf" class="button" download>📄 Download CV</a>
-  </div>
-</div>
-    <nav>
+
+  <div class="bg-grid"></div>
+
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">DB.</a>
+    <div class="nav-links">
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
-    </nav>
-  </header>
+    </div>
+  </nav>
+
+  <div id="hero">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="hero-tag">
+          <span class="dot"></span>
+          Available for work
+        </div>
+        <h1>DOMINIK<br><span>BOROS</span></h1>
+        <p class="hero-sub">Mobile developer & CS student crafting clean, fast apps with React Native — Timisoara, Romania.</p>
+        <div class="hero-actions">
+          <a href="Dominik's Resume.pdf" class="btn-primary" download>
+            <i class="fas fa-download"></i> Download CV
+          </a>
+          <a href="#contact" class="btn-secondary">
+            <i class="fas fa-paper-plane"></i> Get in touch
+          </a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="profile-wrapper">
+          <img src="profile.jpg" alt="Dominik Boros" class="profile-pic" />
+          <div class="profile-badge">Mobile Dev</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <section id="about">
-    <h2>About Me</h2>
-    <p>I’m a dynamic and sociable mobile developer with a strong passion for technology. Currently studying Computer Science at West University of Timisoara, I thrive on learning new skills and delivering positive results for clients. I'm competing in as many hackathons as I can and doing my best in all of them, I'm open to learning new things.</p>
+    <p class="section-label reveal">01 — About</p>
+    <h2 class="reveal">Who I Am</h2>
+    <div class="about-grid">
+      <p class="about-text reveal">
+        I'm a <strong>dynamic and sociable mobile developer</strong> with a strong passion for technology. Currently studying <strong>Computer Science at West University of Timisoara</strong>, I thrive on learning new skills and delivering real results.<br><br>
+        I compete in as many <strong>hackathons</strong> as I can, pushing myself to build fast and build well. Always open to collaborating on exciting new projects.
+      </p>
+      <div class="about-stats reveal">
+        <div class="stat"><div class="stat-num">4+</div><div class="stat-label">Projects built</div></div>
+        <div class="stat"><div class="stat-num">&#x221e;</div><div class="stat-label">Hackathons entered</div></div>
+        <div class="stat"><div class="stat-num">CS</div><div class="stat-label">UVT Timisoara</div></div>
+        <div class="stat"><div class="stat-num">RN</div><div class="stat-label">Primary stack</div></div>
+      </div>
+    </div>
   </section>
 
   <section id="skills">
-    <h2>Skills</h2>
-    <ul class="skills-list">
-      <li><i class="fab fa-react"></i> React Native, React, Expo</li>
-      <li><i class="fas fa-database"></i> Firebase, Google Maps API, Geocoding API</li>
-      <li><i class="fas fa-code"></i> TypeScript, Java, Python</li>
-      <li><i class="fas fa-globe"></i> HTML, CSS, JavaScript</li>
-    </ul>
+    <p class="section-label reveal">02 — Skills</p>
+    <h2 class="reveal">Tech Stack</h2>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon"><i class="fab fa-react"></i></div>
+        <div class="skill-name">Mobile &amp; Frontend</div>
+        <div class="skill-tags">
+          <span class="tag">React Native</span>
+          <span class="tag">React</span>
+          <span class="tag">Expo</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon"><i class="fas fa-database"></i></div>
+        <div class="skill-name">Backend &amp; APIs</div>
+        <div class="skill-tags">
+          <span class="tag">Firebase</span>
+          <span class="tag">Google Maps API</span>
+          <span class="tag">Geocoding API</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon"><i class="fas fa-code"></i></div>
+        <div class="skill-name">Languages</div>
+        <div class="skill-tags">
+          <span class="tag">TypeScript</span>
+          <span class="tag">Java</span>
+          <span class="tag">Python</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon"><i class="fas fa-globe"></i></div>
+        <div class="skill-name">Web</div>
+        <div class="skill-tags">
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="projects">
-    <h2>Projects</h2>
-    <div class="project">
-      <h3>SalontaFood</h3>
-      <p>Local food place app for Salonta, Romania. Each with tags, location, phone number, and more.</p>
-      <p>Site: <a href="https://dominikboros1.github.io/SalontaFoodMobile">SalontaFood</a></p>
-    </div>
-    <div class="project">
-      <h3>EcoMap</h3>
-      <p>Recycling locator app with custom Google Maps markers.</p>
-    </div>
-    <div class="project">
-      <h3>DropX</h3>
-      <p>Courier automation app using Firebase and geolocation APIs.</p>
-    </div>
-    <div class="project">
-      <h3>InfoCar</h3>
-      <p>Car diagnostic app using CarQuery and Google Maps APIs.</p>
+    <p class="section-label reveal">03 — Projects</p>
+    <h2 class="reveal">Selected Work</h2>
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <div class="project-num">001</div>
+        <div class="project-arrow"><i class="fas fa-arrow-right"></i></div>
+        <h3>SalontaFood</h3>
+        <p>Local food discovery app for Salonta, Romania — listings with tags, location, phone numbers and more.</p>
+        <a href="https://dominikboros1.github.io/SalontaFoodMobile" class="project-link" target="_blank" rel="noopener noreferrer">
+          View project <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-num">002</div>
+        <div class="project-arrow"><i class="fas fa-arrow-right"></i></div>
+        <h3>EcoMap</h3>
+        <p>Recycling locator app with custom Google Maps markers, helping users find nearby recycling points fast.</p>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-num">003</div>
+        <div class="project-arrow"><i class="fas fa-arrow-right"></i></div>
+        <h3>DropX</h3>
+        <p>Courier automation app powered by Firebase and geolocation APIs, streamlining package delivery workflows.</p>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-num">004</div>
+        <div class="project-arrow"><i class="fas fa-arrow-right"></i></div>
+        <h3>InfoCar</h3>
+        <p>Car diagnostic companion using CarQuery and Google Maps APIs for on-the-go vehicle information.</p>
+      </div>
+
     </div>
   </section>
 
   <section id="contact">
-    <h2>Contact</h2>
-    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:dominikboros75@gmail.com">dominikboros75@gmail.com</a></p>
-    <p><i class="fab fa-github"></i> GitHub: <a href="https://github.com/dominikboros1">dominikboros1</a></p>
-    <p><i class="fab fa-linkedin"></i> LinkedIn: <a href="https://linkedin.com/in/dominikboros">linkedin.com/in/dominikboros</a></p>
-    <p><i class="fab fa-instagram"></i> Instagram: <a href="https://instagram.com/dominik.boros.758">@dominik.boros.758</a></p>
+    <p class="section-label reveal">04 — Contact</p>
+    <div class="contact-grid">
+      <div>
+        <h2 class="reveal">Let's<br><span style="color:var(--accent)">Talk.</span></h2>
+        <p class="contact-text reveal">Got a project in mind, a hackathon team spot, or just want to say hi? My inbox is always open.</p>
+        <div class="contact-links reveal">
+          <a href="mailto:dominikboros75@gmail.com" class="contact-item">
+            <i class="fas fa-envelope"></i>
+            dominikboros75@gmail.com
+            <span>Email</span>
+          </a>
+          <a href="https://github.com/dominikboros1" class="contact-item" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-github"></i>
+            dominikboros1
+            <span>GitHub</span>
+          </a>
+          <a href="https://linkedin.com/in/dominikboros" class="contact-item" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-linkedin"></i>
+            linkedin.com/in/dominikboros
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://instagram.com/dominik.boros.758" class="contact-item" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-instagram"></i>
+            @dominik.boros.758
+            <span>Instagram</span>
+          </a>
+        </div>
+      </div>
+      <div class="contact-cta reveal">
+        <h3>Based in<br><span>Timisoara,</span><br>Romania.</h3>
+        <br>
+        <a href="Dominik's Resume.pdf" class="btn-primary" download style="margin-top:16px;display:inline-flex;">
+          <i class="fas fa-download"></i> Download CV
+        </a>
+      </div>
+    </div>
   </section>
 
   <footer>
-    <p>© 2025 Dominik Boros</p>
-    <a href="#top" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+    <p>&#169; 2025 Dominik Boros &#8212; Mobile Developer</p>
+    <a href="#hero" class="back-top"><i class="fas fa-arrow-up"></i></a>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', function() {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry, i) {
+        if (entry.isIntersecting) {
+          setTimeout(function() {
+            entry.target.classList.add('visible');
+          }, i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(function(r) { observer.observe(r); });
+  </script>
 </body>
 </html>
